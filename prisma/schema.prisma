@@ -14,7 +14,7 @@ model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
-  role      Role     @default(STUDENT)
+  role      Role     @default(USER)
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -22,6 +22,5 @@ model User {
 
 enum Role {
   ADMIN
-  STUDENT
-  TEACHER
+  USER
 }
