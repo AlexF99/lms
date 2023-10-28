@@ -8,7 +8,6 @@ export default withAuth(
     {
         callbacks: {
             authorized: ({ req, token }) => {
-                console.log(token)
                 if (token !== null || req.nextUrl.pathname.startsWith('/auth'))
                     return true
                 return false
