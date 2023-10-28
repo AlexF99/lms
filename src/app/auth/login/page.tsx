@@ -15,12 +15,20 @@ export default function Login() {
   const { register, handleSubmit } = useForm<loginForm>();
 
   const submit = async (data: any) => {
-    const signinData = await signIn('credentials', {
-      ...data
-    })
-    if (signinData?.error) console.log(signinData.error)
-    else router.push("/")
-    console.log(signinData)
+    try {
+      const signinData = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: true,
+        callbackUrl: '/'
+      })
+      if (signinData?.error) {
+        console.log(signinData.error)
+      }
+      else router.push("/")
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (

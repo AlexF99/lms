@@ -1,11 +1,12 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import prisma from "./db";
 import { compare } from "bcrypt";
+import prisma from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
+    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: 'jwt'
     },
@@ -28,7 +29,10 @@ export const authOptions: NextAuthOptions = {
                 if (!existingUser) return null;
 
                 const passwordMatch = await compare(credentials.password, existingUser.password);
-                if (!passwordMatch) return null;
+                if (!passwordMatch) {
+                    console.log("password did not match!")
+                    return null;
+                }
 
                 return {
                     id: existingUser.id,
@@ -38,5 +42,18 @@ export const authOptions: NextAuthOptions = {
                 };
             }
         })
-    ]
+    ],
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                return {
+                    ...token, name: user.name, email: user.email, role: user.role
+                };
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            return { ...session, user: { ...session.user, email: token.email, role: token.role } }
+        },
+    }
 }
