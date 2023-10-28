@@ -20,12 +20,12 @@ export default function Login() {
         email: data.email,
         password: data.password,
         redirect: true,
-        callbackUrl: '/'
+        callbackUrl: '/home'
       })
       if (signinData?.error) {
         console.log(signinData.error)
       }
-      else router.push("/")
+      else router.push("/home")
     } catch (err) {
       console.error(err)
     }
@@ -35,8 +35,10 @@ export default function Login() {
     <div className='flex justify-center'>
       <div>
         <div>
-          <Link className='mr-3' href='/'>Back</Link>
-          <span>Login</span>
+          <span className='mr-3 text-xl'>Login</span>
+          <span>Need to create an account?
+            <Link className='ml-2 link' href='/auth/register'>Sign Up</Link>
+          </span>
         </div>
         <form className='mt-3' onSubmit={handleSubmit((data) => submit(data))}>
           <input type="text" {...register('email')} placeholder="e-mail" className="input  mb-2 input-bordered w-full" />

@@ -15,7 +15,6 @@ export default function Register() {
   const { register, handleSubmit } = useForm<signUpForm>();
 
   const submit = async (data: any) => {
-    console.log(data)
     try {
       const res = await (await fetch("/api/user",
         {
@@ -33,8 +32,10 @@ export default function Register() {
     <div className='flex justify-center'>
       <div>
         <div>
-          <Link className='mr-3' href='/'>Back</Link>
-          <span>Sign-up</span>
+          <span className='mr-3 text-xl'>Sign Up</span>
+          <span>Already have an account?
+            <Link className='ml-2 link' href='/auth/login'>Login</Link>
+          </span>
         </div>
         <form className='mt-3' onSubmit={handleSubmit((data) => submit(data))}>
           <input type="text" {...register('email')} placeholder="e-mail" className="input  mb-2 input-bordered w-full" />

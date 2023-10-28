@@ -1,27 +1,21 @@
-import Signout from "@/components/signout";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
+'use client'
 
-export default async function Home() {
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-  const session = await getServerSession(authOptions)
-  const user = session?.user;
+export default function Base() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user) {
+      router.push('/home');
+    }
+  }, [session])
 
   return (
     <div>
-      <div className="flex justify-end">
-        {!user ?
-          (<div>
-            <Link className="mr-3" href={'/auth/login'}>Login</Link>
-            <Link href={'/auth/register'}>Sign Up</Link>
-          </div>) :
-          <Signout></Signout>
-        }
-      </div>
-      {user && <div className="container">
-        Welcome, {user?.email}
-      </div>}
     </div>
   )
 }

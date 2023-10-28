@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import SessProvider from '@/components/sessProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +17,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="dark">
-      <body className={`${inter.className} container mx-auto p-4`}>{children}</body>
+      <body className={`${inter.className} container mx-auto p-4`}>
+        <SessProvider>
+          <main>
+            {children}
+          </main>
+        </SessProvider>
+      </body>
     </html>
   )
 }
