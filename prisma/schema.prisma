@@ -26,6 +26,7 @@ model User {
 
 model Course {
   id       String   @id @default(uuid())
+  title    String
   owner    User     @relation("ownership", fields: [ownerId], references: [id])
   ownerId  String   @unique
   students User[]   @relation("enrollment")
@@ -34,6 +35,7 @@ model Course {
 
 model Module {
   id       String    @id @default(uuid())
+  title    String
   course   Course    @relation(fields: [courseId], references: [id])
   courseId String    @unique
   lectures Lecture[]
