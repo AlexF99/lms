@@ -11,13 +11,87 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  role      Role     @default(USER)
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  role         Role      @default(USER)
+  password     String
+  coursesOwned Course[]  @relation("ownership")
+  enrollment   Course[]  @relation("enrollment")
+  Answer       Answer[]
+  comment      Comment[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Course {
+  id       String   @id @default(uuid())
+  owner    User     @relation("ownership", fields: [ownerId], references: [id])
+  ownerId  String   @unique
+  students User[]   @relation("enrollment")
+  modules  Module[]
+}
+
+model Module {
+  id       String    @id @default(uuid())
+  course   Course    @relation(fields: [courseId], references: [id])
+  courseId String    @unique
+  lectures Lecture[]
+  quizes   Quiz[]
+}
+
+model Lecture {
+  id       String    @id @default(uuid())
+  module   Module    @relation(fields: [moduleId], references: [id])
+  moduleId String    @unique
+  title    String
+  media    String
+  Comment  Comment[]
+}
+
+model Comment {
+  id        String  @id @default(uuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique
+  lecture   Lecture @relation(fields: [lectureId], references: [id])
+  lectureId String  @unique
+  text      String
+}
+
+model Quiz {
+  id       String     @id @default(uuid())
+  title    String
+  module   Module     @relation(fields: [moduleId], references: [id])
+  moduleId String     @unique
+  Question Question[]
+}
+
+model Question {
+  id     String   @id @default(uuid())
+  text   String
+  quiz   Quiz     @relation(fields: [quizId], references: [id])
+  quizId String   @unique
+  choice Choice[]
+  answer Answer[]
+}
+
+model Choice {
+  id         String   @id @default(uuid())
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String   @unique
+  text       String
+  isCorrect  Boolean
+  answer     Answer[]
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @unique
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String   @unique
+  choice     Choice   @relation(fields: [choiceId], references: [id])
+  choiceId   String   @unique
 }
 
 enum Role {
