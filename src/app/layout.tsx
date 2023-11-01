@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="cupcake">
       <body className={`${inter.className} container mx-auto p-4`}>
         <SessProvider>
           <main>
