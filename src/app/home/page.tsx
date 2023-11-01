@@ -11,22 +11,43 @@ export default async function Home() {
       OR: [
         { ownerId: loggedUser?.id },
         {
-          students: {
+          enrollment: {
             some: {
-              id: loggedUser?.id
+              userId: loggedUser?.id
             }
           }
         }
       ]
+    },
+    select: {
+      categories: true,
+      title: true,
+      id: true
     }
   })
 
-  console.log(myCourses)
+  console.log(myCourses);
+
+
 
   return (
     <div>
       <h1 className='mr-3 text-xl'>My courses</h1>
-
+      {myCourses && myCourses.map(course => (
+        <div key={course.id} className="card w-96 bg-base-100 shadow-xl">
+          <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="courseLogo" /></figure>
+          <div className="card-body">
+            <h2 className="card-title">
+              {course.title}
+            </h2>
+            <div className="card-actions justify-end">
+              {course.categories && course.categories.map(cat => (
+                <div className="badge badge-outline">{cat.name}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

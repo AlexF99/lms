@@ -11,33 +11,49 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
+  id           String       @id @default(uuid())
   name         String
-  email        String    @unique
-  role         Role      @default(USER)
+  email        String       @unique
+  role         Role         @default(USER)
   password     String
-  coursesOwned Course[]  @relation("ownership")
-  enrollment   Course[]  @relation("enrollment")
+  coursesOwned Course[]     @relation("ownership")
   Answer       Answer[]
   comment      Comment[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  enrollment   Enrollment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Enrollment {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  @@id([userId, courseId])
 }
 
 model Course {
-  id       String   @id @default(uuid())
-  title    String
-  owner    User     @relation("ownership", fields: [ownerId], references: [id])
-  ownerId  String   @unique
-  students User[]   @relation("enrollment")
-  modules  Module[]
+  id         String           @id @default(uuid())
+  title      String
+  owner      User             @relation("ownership", fields: [ownerId], references: [id])
+  ownerId    String
+  modules    Module[]
+  enrollment Enrollment[]
+  categories CourseCategory[]
+}
+
+model CourseCategory {
+  id     String   @id @default(uuid())
+  name   String
+  course Course[]
 }
 
 model Module {
   id       String    @id @default(uuid())
   title    String
   course   Course    @relation(fields: [courseId], references: [id])
-  courseId String    @unique
+  courseId String
   lectures Lecture[]
   quizes   Quiz[]
 }
@@ -45,26 +61,27 @@ model Module {
 model Lecture {
   id       String    @id @default(uuid())
   module   Module    @relation(fields: [moduleId], references: [id])
-  moduleId String    @unique
+  moduleId String
   title    String
   media    String
   Comment  Comment[]
 }
 
 model Comment {
-  id        String  @id @default(uuid())
   user      User    @relation(fields: [userId], references: [id])
-  userId    String  @unique
+  userId    String
   lecture   Lecture @relation(fields: [lectureId], references: [id])
-  lectureId String  @unique
+  lectureId String
   text      String
+
+  @@id([userId, lectureId])
 }
 
 model Quiz {
   id       String     @id @default(uuid())
   title    String
   module   Module     @relation(fields: [moduleId], references: [id])
-  moduleId String     @unique
+  moduleId String
   Question Question[]
 }
 
@@ -72,7 +89,7 @@ model Question {
   id     String   @id @default(uuid())
   text   String
   quiz   Quiz     @relation(fields: [quizId], references: [id])
-  quizId String   @unique
+  quizId String
   choice Choice[]
   answer Answer[]
 }
@@ -80,20 +97,21 @@ model Question {
 model Choice {
   id         String   @id @default(uuid())
   question   Question @relation(fields: [questionId], references: [id])
-  questionId String   @unique
+  questionId String
   text       String
   isCorrect  Boolean
   answer     Answer[]
 }
 
 model Answer {
-  id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id])
-  userId     String   @unique
+  userId     String
   question   Question @relation(fields: [questionId], references: [id])
-  questionId String   @unique
+  questionId String
   choice     Choice   @relation(fields: [choiceId], references: [id])
-  choiceId   String   @unique
+  choiceId   String
+
+  @@id([questionId, choiceId, userId])
 }
 
 enum Role {
