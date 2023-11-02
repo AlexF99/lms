@@ -68,13 +68,13 @@ model Lecture {
 }
 
 model Comment {
-  user      User    @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  lecture   Lecture @relation(fields: [lectureId], references: [id])
+  lecture   Lecture  @relation(fields: [lectureId], references: [id])
   lectureId String
   text      String
-
-  @@id([userId, lectureId])
+  createdAt DateTime @default(now())
 }
 
 model Quiz {

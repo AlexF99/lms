@@ -1,4 +1,5 @@
 import EnrollButton from "@/components/enroll";
+import LectureQuizLink from "@/components/lectureQuizLink";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db"
 import { getServerSession } from "next-auth";
@@ -29,18 +30,19 @@ export default async function Page({ params }: { params: { id: string } }) {
                 courseId: params.id
             }
         })
+
         return (
             <>
                 <h1 className="text-xl text-center">{course.title}</h1>
                 <div className="mt-3">
                     {modules && modules.map((mod, i: number) => (
-                        <div className="collapse bg-base-200 mb-2">
+                        <div key={i} className="collapse bg-base-200 mb-2">
                             <input type="radio" name="my-accordion-1" defaultChecked={i === 0} />
                             <div className="collapse-title text-l font-medium">
                                 {mod.title}
                             </div>
                             <div className="collapse-content">
-                                <p>hello</p>
+                                <LectureQuizLink moduleId={mod.id} />
                             </div>
                         </div>
                     ))}
