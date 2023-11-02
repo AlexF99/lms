@@ -26,11 +26,11 @@ export default async function LectureQuizLink(props: any) {
 
     return (
         <div>
-            {lectures && lectures.map(lec => (
-                <Link href={`/home/lecture/${lec.id}`}>{lec.title}</Link>
+            {lectures && lectures.map((lec, i) => (
+                <Link key={i} href={`/home/lecture/${lec.id}`}>{lec.title}</Link>
             ))}
-            {quizes && quizes.map(q => (
-                <Link href={`/home/quiz/${q.id}`}>{q.title}</Link>
+            {quizes && quizes.map((q, i) => (
+                <Link key={i} href={`/home/quiz/${q.id}`}>{q.title}</Link>
             ))}
         </div>
     )

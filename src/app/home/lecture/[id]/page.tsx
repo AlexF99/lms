@@ -1,3 +1,4 @@
+import Comments from "@/components/comments";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db"
 import { getServerSession } from "next-auth";
@@ -10,14 +11,6 @@ export default async function Page({ params }: { params: { id: string } }) {
             where: {
                 id: params.id
             }
-        })
-
-        const comments = await prisma.comment.findMany({
-            where: {
-                lectureId: params.id
-            },
-            select: { user: true, text: true, createdAt: true },
-            orderBy: {createdAt: "desc"}
         })
 
         if (!lecture) return <h1>Could not find lecture!</h1>
@@ -40,18 +33,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                 </div>
                 <div>
-                    <h2 className="text-xl">comments</h2>
-                    <div className="grid grid-cols-1 divide-y">
-                        {comments && comments.map((c, i) => (
-                            <div key={i}>
-                                <div>
-                                    <span>{c.createdAt.toLocaleString()}</span>
-                                    <span>{c.user.name}:</span>
-                                </div>
-                                <span>{c.text}</span>
-                            </div>
-                        ))}
-                    </div>
+                    {params.id && loggedUser?.id
+                        ? (<Comments lectureId={params.id} userId={loggedUser?.id} />)
+                        : (<div>No Comments</div>)}
                 </div>
             </div>
         )
