@@ -10,7 +10,7 @@ export default function HomeLayout({
   return (
     <div className="drawer">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content overflow-hidden">
+      <div className="drawer-content overflow-hidden h-[calc(100vh-1rem)]">
         <div className="navbar bg-base-100">
           <div className="flex-none">
             <label htmlFor="my-drawer" className="btn btn-square btn-ghost drawer-button">
@@ -37,14 +37,12 @@ export default function HomeLayout({
             </Link>
           </li>
           <li>
-            <Link href="/home">
-              Item 1
+            <Link href="/profile">
+              Profile
             </Link>
           </li>
           <li>
-            <Link href="/home">
-              Item 3
-            </Link>
+            <Signout></Signout>
           </li>
         </ul>
       </div>
