@@ -17,12 +17,9 @@ interface commentForm {
 }
 
 export default function Comments(props: any) {
-
     const { userId, lectureId } = props;
-
     const [comments, setComments] = useState<Comment[]>([]);
-
-    const { register, handleSubmit } = useForm<commentForm>();
+    const { register, handleSubmit, reset } = useForm<commentForm>();
 
     const addComment = async (comment: commentForm) => {
         const res = await (await fetch("/api/comment",
@@ -31,14 +28,17 @@ export default function Comments(props: any) {
                 body: JSON.stringify({ userId: userId, lectureId: lectureId, text: comment.text })
             })).json();
 
-        console.log(res.comment);
-        const newComment: any = res.comment;
-        setComments([res.comment, ...comments])
+        reset()
+        await fetchComments();
+    }
+
+    const fetchComments = async () => {
+        fetch(`/api/comment?lectureId=${lectureId}`).then(async (res) => setComments((await res.json()).comments))
     }
 
     useEffect(() => {
         if (userId && lectureId) {
-            fetch(`/api/comment?lectureId=${lectureId}`).then(async (res) => setComments((await res.json()).comments))
+            fetchComments();
         }
 
     }, [userId, lectureId])

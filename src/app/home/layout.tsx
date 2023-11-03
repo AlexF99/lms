@@ -10,7 +10,7 @@ export default function HomeLayout({
   return (
     <div className="drawer">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
+      <div className="drawer-content overflow-hidden">
         <div className="navbar bg-base-100">
           <div className="flex-none">
             <label htmlFor="my-drawer" className="btn btn-square btn-ghost drawer-button">
@@ -24,7 +24,9 @@ export default function HomeLayout({
             <Signout></Signout>
           </div>
         </div>
-        {children}
+        <div className="overflow-y-auto overflow-x-hidden h-[calc(100%-80px)]">
+          {children}
+        </div>
       </div>
       <div className="drawer-side">
         <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
