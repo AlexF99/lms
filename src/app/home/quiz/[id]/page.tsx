@@ -1,3 +1,4 @@
+import QuizForm from "@/components/quizForm";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db"
 import { getServerSession } from "next-auth";
@@ -31,22 +32,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <h1 className="text-xl text-center">{quiz?.title}</h1>
 
                 <div className="mt-3">
-                    <form>
-                        {questions && questions.map(q => (
-                            <div key={q.id}>
-                                {q.text}
-                                <ul>
-                                    {q.choice && q.choice.map(c => (
-                                        <li key={c.id}>{c.text}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </form>
+                    {loggedUser && quiz &&
+                        <QuizForm quiz={{ ...quiz, id: params.id }} userId={loggedUser.id}></QuizForm>
+                    }
                 </div>
             </div>
         )
     } catch (err) {
-        return <h1>Could not load lecture</h1>
+        return <h1>Could not load quiz</h1>
     }
 }

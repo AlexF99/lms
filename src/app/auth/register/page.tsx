@@ -21,7 +21,6 @@ export default function Register() {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         })).json();
-      console.log(res)
       router.push("/auth/login")
     } catch (err) {
       console.error(err);
