@@ -43,6 +43,10 @@ export default function Comments(props: any) {
 
     }, [userId, lectureId])
 
+    const dateToString = (date: Date) => {
+        return new Date(date).toLocaleString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric" }).toString();
+    }
+
     return (
         <div>
             <h2 className="text-xl">Comments</h2>
@@ -56,8 +60,8 @@ export default function Comments(props: any) {
                 {comments && comments.map((c: Comment, i: number) => (
                     <div key={i}>
                         <div>
-                            <span>{c?.createdAt?.toLocaleString()}</span>
-                            <span>{c?.user?.name}:</span>
+                            <span>{dateToString(c.createdAt)}</span>
+                            <span className="ml-2">{c?.user?.name}:</span>
                         </div>
                         <span>{c?.text}</span>
                     </div>
