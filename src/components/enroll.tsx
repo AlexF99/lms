@@ -1,6 +1,8 @@
 'use client'
+import { useRouter } from "next/navigation";
 
 export default function EnrollButton(props: any) {
+    const router = useRouter();
 
     const { userId, courseId } = props;
 
@@ -10,6 +12,7 @@ export default function EnrollButton(props: any) {
                 method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId: userId, courseId: courseId })
             })).json();
+        router.refresh();
     }
 
     return (
