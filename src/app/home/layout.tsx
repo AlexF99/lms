@@ -1,12 +1,16 @@
 import '../globals.css'
 import Link from 'next/link'
 import Signout from '@/components/signout'
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
-export default function HomeLayout({
+export default async function HomeLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const loggedUser = (await getServerSession(authOptions))?.user;
+
   return (
     <div className="drawer">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -21,6 +25,7 @@ export default function HomeLayout({
             <Link href="/home" className="btn btn-ghost normal-case text-xl">lms</Link>
           </div>
           <div className="flex-none">
+            <span>{loggedUser?.email}</span>
             <Signout></Signout>
           </div>
         </div>
