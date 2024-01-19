@@ -1,5 +1,6 @@
 'use client'
 
+import RichEditor from "@/components/RichEditor";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -29,6 +30,7 @@ export default function LectureEditor(props: any) {
         <div>
             <form className="" onSubmit={handleSubmit((data) => submit(data))}>
                 <input type="text" {...register('text')} placeholder="Title" className="input  mb-2 input-bordered w-full" />
+                <RichEditor />
                 <button className="btn btn-primary">submit</button>
             </form>
         </div>
