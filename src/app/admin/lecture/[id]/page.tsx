@@ -1,5 +1,5 @@
 import prisma from "@/lib/db"
-import LectureEditor from "../editor"
+import LectureEditor from "../lectureEditor"
 
 export default async function Page({ params }: { params: { id: string } }) {
     try {
@@ -9,11 +9,15 @@ export default async function Page({ params }: { params: { id: string } }) {
             }
         })
 
+        const modules = await prisma.module.findMany({
+            select: { id: true, title: true },
+        })
+
         if (!lecture) return <h1>Could not find lecture!</h1>
 
         return (
             <div>
-                <LectureEditor></LectureEditor>
+                <LectureEditor lectureToEdit={lecture} modules={modules}></LectureEditor>
             </div>
         )
     } catch (err) {

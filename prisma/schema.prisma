@@ -64,6 +64,7 @@ model Lecture {
   moduleId String
   title    String
   media    String
+  richText String    @db.Text
   Comment  Comment[]
 }
 

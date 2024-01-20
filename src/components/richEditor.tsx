@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
-export default function RichEditor() {
-  const [content, setContent] = useState('');
-
+export default function RichEditor(props: any) {
+  const initialContent = props.content;
+  const [content, setContent] = useState(initialContent);
 
   const quillModules = {
     toolbar: [
@@ -43,8 +43,8 @@ export default function RichEditor() {
 
   const handleEditorChange = (newContent: any) => {
     setContent(newContent);
+    props.richtextChange(newContent)
   };
-
 
   return (
     <div className="flex items-center flex-col">
@@ -55,6 +55,8 @@ export default function RichEditor() {
         formats={quillFormats}
         className="w-full h-[70%] mt-10 bg-white"
       />
+      {/* preview */}
+      {/* <div dangerouslySetInnerHTML={{ __html: content }}></div> */}
     </div>
   );
 }

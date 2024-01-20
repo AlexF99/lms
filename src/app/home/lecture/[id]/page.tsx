@@ -3,6 +3,8 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db"
 import { getServerSession } from "next-auth";
 
+import DOMPurify from "isomorphic-dompurify";
+
 export default async function Page({ params }: { params: { id: string } }) {
     try {
         const loggedUser = (await getServerSession(authOptions))?.user;
@@ -14,6 +16,8 @@ export default async function Page({ params }: { params: { id: string } }) {
         })
 
         if (!lecture) return <h1>Could not find lecture!</h1>
+
+        const cleanRichText = DOMPurify.sanitize(lecture.richText)
 
         return (
             <div>
@@ -32,6 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     }
 
                 </div>
+                <div dangerouslySetInnerHTML={{ __html: cleanRichText }}></div>
                 <div>
                     {params.id && loggedUser?.id
                         ? (<Comments lectureId={params.id} userId={loggedUser?.id} />)
