@@ -11,6 +11,7 @@ export default async function Home() {
     select: {
       categories: true,
       title: true,
+      imageUrl: true,
       id: true
     }
   });
@@ -31,6 +32,7 @@ export default async function Home() {
     select: {
       categories: true,
       title: true,
+      imageUrl: true,
       id: true
     }
   })

@@ -4,7 +4,7 @@ import prisma from "@/lib/db"
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-        const { title, categoryId } = body;
+        const { title, categoryId, imageUrl } = body;
         const admin = await prisma.user.findUnique({
             where: {
                 role: 'ADMIN',
@@ -21,6 +21,7 @@ export async function POST(req: Request) {
             data: {
                 ownerId: admin.id,
                 title: title,
+                imageUrl,
                 categories: {
                     connect: [{
                         id: categoryId
@@ -40,13 +41,14 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
     try {
         const body = await req.json()
-        const { title, categoryId, id } = body;
+        const { title, categoryId, id, imageUrl } = body;
         const updatedCourse = await prisma.course.update({
             where: {
                 id
             },
             data: {
                 title: title,
+                imageUrl,
                 categories: {
                     connect: [{
                         id: categoryId

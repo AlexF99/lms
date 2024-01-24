@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { put } from "@vercel/blob";
+import { upload } from "@vercel/blob/client";
 
 interface courseForm {
     categoryId: string;
@@ -26,21 +28,29 @@ export default function CourseEditor(props: any) {
     }, [props])
 
     const submit = async (course: courseForm) => {
+        let newBlob;
+        let imageUrl
+        if (file && file !== undefined) {
+            newBlob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/blob/upload',
+            });
+            console.log(newBlob)
+            imageUrl = newBlob ? newBlob.url : '';
+        }
         if (courseToEdit !== undefined && courseToEdit !== null) {
             // edit
-            const updated = { ...course, id: courseToEdit.id }
             await (await fetch("/api/course",
                 {
                     method: "PUT", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...updated })
+                    body: JSON.stringify({ ...course, id: courseToEdit.id, imageUrl })
                 })).json();
         } else {
             // create
-            const newCourse = { ...course }
             await (await fetch("/api/course",
                 {
                     method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...newCourse })
+                    body: JSON.stringify({ ...course, imageUrl })
                 })).json();
         }
         router.push("/admin/course")

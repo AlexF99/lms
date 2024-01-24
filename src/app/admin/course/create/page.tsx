@@ -9,7 +9,7 @@ export default async function Page() {
 
     return (
         <div>
-            <h1 className="text-xl">Create new lecture</h1>
+            <h1 className="text-xl">Create new course</h1>
             <CourseEditor categories={categories}></CourseEditor>
         </div>
     )
