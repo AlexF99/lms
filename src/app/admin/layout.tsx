@@ -42,6 +42,11 @@ export default async function AdminLayout({
             </Link>
           </li>
           <li>
+            <Link href="/admin/course">
+              Courses
+            </Link>
+          </li>
+          <li>
             <Signout></Signout>
           </li>
         </ul>

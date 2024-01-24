@@ -1,35 +1,36 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
 
-const Lecture = async () => {
+const Course = async () => {
 
-    const lectures = await prisma.lecture.findMany({
+    const courses = await prisma.course.findMany({
         select: {
             id: true,
-            title: true
+            title: true,
+            categories: true
         },
     })
     return (
         <div>
             <div className="flex justify-between">
 
-                <h1 className="text-xl">Lectures</h1>
-                <Link href={'/admin/lecture/create'} className="btn btn-primary">Add new</Link>
+                <h1 className="text-xl">courses</h1>
+                <Link href={'/admin/course/create'} className="btn btn-primary">Add new</Link>
             </div>
 
             <div className="overflow-x-auto">
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>title</th>
+                            <th>Name</th>
                             <th>id</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {lectures && lectures.map((lec, i) => (
+                        {courses && courses.map((course, i) => (
                             <tr key={i}>
-                                <th><Link href={`/admin/lecture/${lec.id}`}>{lec.title}</Link></th>
-                                <td>{lec.id}</td>
+                                <th><Link href={`/admin/course/${course.id}`}>{course.title}</Link></th>
+                                <td>{course.id}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -38,4 +39,4 @@ const Lecture = async () => {
         </div>)
 }
 
-export default Lecture;
+export default Course;
