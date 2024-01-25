@@ -25,6 +25,9 @@ export default async function HomeLayout({
             <Link href="/home" className="btn btn-ghost normal-case text-xl">lms</Link>
           </div>
           <div className="flex-none">
+            {loggedUser?.role === "ADMIN" &&
+              <Link className='btn btn-primary mr-3' href="/admin" >ADMIN PANEL</Link>
+            }
             <span>{loggedUser?.email}</span>
             <Signout></Signout>
           </div>

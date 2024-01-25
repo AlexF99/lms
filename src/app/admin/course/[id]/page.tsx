@@ -10,6 +10,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             select: {
                 id: true,
                 title: true,
+                imageUrl: true,
                 categories: true
             },
         })

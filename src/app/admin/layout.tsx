@@ -1,6 +1,7 @@
 import '../globals.css'
 import Link from 'next/link'
 import Signout from '@/components/signout'
+import adminRoutes from './adminRoutes'
 
 export default async function AdminLayout({
   children,
@@ -21,6 +22,7 @@ export default async function AdminLayout({
             <Link href="/admin" className="btn btn-ghost normal-case text-xl">lms ADMIN</Link>
           </div>
           <div className="flex-none">
+            <Link className='btn btn-primary mr-3' href="/" >HOME</Link>
             <Signout></Signout>
           </div>
         </div>
@@ -31,21 +33,11 @@ export default async function AdminLayout({
       <div className="drawer-side">
         <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-          <li>
-            <Link href="/admin/lecture">
-              Lectures
+          {adminRoutes && Object.keys(adminRoutes).map((r, i) => <li key={i}>
+            <Link href={adminRoutes[r]}>
+              {r.toUpperCase()}
             </Link>
-          </li>
-          <li>
-            <Link href="/admin/quiz">
-              Quizes
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin/course">
-              Courses
-            </Link>
-          </li>
+          </li>)}
           <li>
             <Signout></Signout>
           </li>

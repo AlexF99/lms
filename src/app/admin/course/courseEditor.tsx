@@ -13,6 +13,7 @@ interface courseForm {
 
 export default function CourseEditor(props: any) {
     const [file, setFile] = useState<File | undefined>(undefined)
+    const [fileLocalUrl, setFileLocalUrl] = useState<string>("")
 
     const { courseToEdit, categories } = props;
     const { register, handleSubmit, setValue, getValues } = useForm<courseForm>();
@@ -59,7 +60,9 @@ export default function CourseEditor(props: any) {
     useEffect(() => { console.log(file) }, [file])
 
     const handleFileChange = (e: any) => {
-        setFile(e.target.files?.[0])
+        const newFile = e.target.files?.[0]
+        setFile(newFile)
+        setFileLocalUrl(URL.createObjectURL(newFile))
     }
 
     return (
@@ -70,7 +73,12 @@ export default function CourseEditor(props: any) {
                     {categories && categories.map((mod: any) => <option key={mod.id} value={mod.id}>{mod.name}</option>)}
                 </select>
                 <input type="text" {...register('title')} placeholder="Title" className="input  mb-2 input-bordered w-full" />
-                <input type="file" className="file-input w-full max-w-xs" onChange={handleFileChange} />
+                <input type="file" className="file-input w-full" onChange={handleFileChange} />
+                {(courseToEdit.imageUrl || file) &&
+                    <div className="w-100">
+                        <img src={file ? fileLocalUrl : courseToEdit.imageUrl} alt="course logo" className="object-cover w-40" />
+                    </div>
+                }
                 <button className="btn btn-primary mt-2">submit</button>
             </form>
         </div>

@@ -24,7 +24,6 @@ export default function LectureEditor(props: any) {
 
     useEffect(() => {
         if (lectureToEdit !== undefined && lectureToEdit !== null && modules && modules?.length) {
-            console.log(getValues());
             const keys = Object.keys(getValues());
             keys.forEach((key: any) => setValue(key, lectureToEdit[key]))
         }
