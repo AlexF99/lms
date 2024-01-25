@@ -96,7 +96,7 @@ export default function CourseEditor(props: any) {
                 </div>
                 <input type="text" {...register('title')} placeholder="Title" className="input  mb-2 input-bordered w-full" />
                 <input type="file" className="file-input w-full" onChange={handleFileChange} />
-                {(courseToEdit.imageUrl || file) &&
+                {(courseToEdit && courseToEdit.imageUrl || file) &&
                     <div className="w-100">
                         <img src={file ? fileLocalUrl : courseToEdit.imageUrl} alt="course logo" className="object-cover w-40" />
                     </div>
