@@ -3,12 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { put } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 
 interface courseForm {
-    categoryId: string;
     title: string;
+}
+
+type Category = {
+    id: string,
+    name: string,
 }
 
 export default function CourseEditor(props: any) {
@@ -19,12 +22,12 @@ export default function CourseEditor(props: any) {
     const { register, handleSubmit, setValue, getValues } = useForm<courseForm>();
     const router = useRouter();
 
+    const [selectedCategories, setSelectedCategories] = useState<Array<Category>>([])
+
     useEffect(() => {
         if (courseToEdit !== undefined && courseToEdit !== null) {
-            const keys = Object.keys(getValues());
-            keys.forEach((key: any) => setValue(key, courseToEdit[key]))
-            if (courseToEdit.categories?.length && courseToEdit.categories[0])
-                setValue("categoryId", courseToEdit.categories[0].id)
+            Object.keys(getValues()).forEach((key: any) => setValue(key, courseToEdit[key]))
+            setSelectedCategories(courseToEdit.categories)
         }
     }, [props])
 
@@ -36,7 +39,6 @@ export default function CourseEditor(props: any) {
                 access: 'public',
                 handleUploadUrl: '/api/blob/upload',
             });
-            console.log(newBlob)
             imageUrl = newBlob ? newBlob.url : '';
         }
         if (courseToEdit !== undefined && courseToEdit !== null) {
@@ -44,20 +46,18 @@ export default function CourseEditor(props: any) {
             await (await fetch("/api/course",
                 {
                     method: "PUT", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...course, id: courseToEdit.id, imageUrl })
+                    body: JSON.stringify({ ...course, id: courseToEdit.id, imageUrl, categories: selectedCategories.map(c => c.id) })
                 })).json();
         } else {
             // create
             await (await fetch("/api/course",
                 {
                     method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...course, imageUrl })
+                    body: JSON.stringify({ ...course, imageUrl, categories: selectedCategories.map(c => c.id) })
                 })).json();
         }
         router.push("/admin/course")
     }
-
-    useEffect(() => { console.log(file) }, [file])
 
     const handleFileChange = (e: any) => {
         const newFile = e.target.files?.[0]
@@ -65,13 +65,35 @@ export default function CourseEditor(props: any) {
         setFileLocalUrl(URL.createObjectURL(newFile))
     }
 
+    const addCategory = (cat: Category) => {
+        const currCat = [...selectedCategories]
+        if (!currCat.includes(cat))
+            currCat?.push(cat);
+
+        console.log(currCat);
+        setSelectedCategories(currCat);
+    }
+
+    const removeCategory = (cat: Category) => {
+        const currCat = [...selectedCategories]
+        setSelectedCategories(currCat.filter(c => c.id !== cat.id));
+    }
+
     return (
         <div>
             <form className="" onSubmit={handleSubmit((data) => submit(data))}>
-                <select {...register('categoryId')} defaultValue={0} className="select select-bordered w-full mb-2">
-                    <option disabled>Choose category</option>
-                    {categories && categories.map((mod: any) => <option key={mod.id} value={mod.id}>{mod.name}</option>)}
-                </select>
+                <div className="columns-2 mt-4 mb-4">
+                    <div className="unselected">
+                        <h3 className="text-xl">unselected</h3>
+                        {categories && categories.map((cat: Category) =>
+                            <button type="button" className="btn btn-round" key={cat.id} onClick={() => addCategory(cat)}>{cat.name}</button>)}
+                    </div>
+                    <div className="selected">
+                        <h3 className="text-xl">selected</h3>
+                        {selectedCategories && Array.from(selectedCategories).map((cat: Category) =>
+                            <button type="button" className="btn btn-round" key={cat.id} onClick={() => removeCategory(cat)}>{cat.name}</button>)}
+                    </div>
+                </div>
                 <input type="text" {...register('title')} placeholder="Title" className="input  mb-2 input-bordered w-full" />
                 <input type="file" className="file-input w-full" onChange={handleFileChange} />
                 {(courseToEdit.imageUrl || file) &&
@@ -79,8 +101,9 @@ export default function CourseEditor(props: any) {
                         <img src={file ? fileLocalUrl : courseToEdit.imageUrl} alt="course logo" className="object-cover w-40" />
                     </div>
                 }
-                <button className="btn btn-primary mt-2">submit</button>
+                <button className="btn btn-primary mt-2" type="submit">submit</button>
             </form>
+            <button className="btn btn-ghost mt-2" onClick={() => router.push("/admin/course")}>cancel</button>
         </div>
     )
 }
