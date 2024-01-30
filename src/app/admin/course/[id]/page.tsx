@@ -1,5 +1,6 @@
 import prisma from "@/lib/db"
 import CourseEditor from "../courseEditor"
+import Link from "next/link"
 
 export default async function Page({ params }: { params: { id: string } }) {
     try {
@@ -24,6 +25,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         return (
             <div>
                 <CourseEditor courseToEdit={course} categories={categories} ></CourseEditor>
+                <Link href={`/admin/course/${params.id}/modules`}>modules</Link>
             </div>
         )
     } catch (err) {

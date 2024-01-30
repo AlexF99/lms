@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -11,11 +11,12 @@ interface lectureForm {
 }
 
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.snow.css';
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function LectureEditor(props: any) {
+    const searchParams = useSearchParams()
     const { lectureToEdit, modules } = props;
     const { register, handleSubmit, setValue, getValues } = useForm<lectureForm>();
     const initialContent = lectureToEdit ? lectureToEdit.richText : '';
@@ -26,10 +27,12 @@ export default function LectureEditor(props: any) {
         if (lectureToEdit !== undefined && lectureToEdit !== null && modules && modules?.length) {
             const keys = Object.keys(getValues());
             keys.forEach((key: any) => setValue(key, lectureToEdit[key]))
-        }
-    }, [props])
+        } else if (searchParams.has("moduleId"))
+            setValue("moduleId", `${searchParams.get("moduleId")}`)
+    }, [props, searchParams])
 
     const submit = async (lecture: lectureForm) => {
+        // switch to server actions ASAP
         if (lectureToEdit !== undefined && lectureToEdit !== null) {
             // edit
             const updated = { ...lecture, richText, id: lectureToEdit.id }
