@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { upload } from "@vercel/blob/client";
+import { deleteBlobAction } from "@/app/actions/deleteBlob";
 
 interface courseForm {
     title: string;
@@ -59,6 +60,10 @@ export default function CourseEditor(props: any) {
         router.push("/admin/course")
     }
 
+    const deleteBlob = async (url: string) => {
+        await deleteBlobAction(url)
+    }
+
     const handleFileChange = (e: any) => {
         const newFile = e.target.files?.[0]
         setFile(newFile)
@@ -99,6 +104,7 @@ export default function CourseEditor(props: any) {
                 {(courseToEdit && courseToEdit.imageUrl || file) &&
                     <div className="w-100">
                         <img src={file ? fileLocalUrl : courseToEdit.imageUrl} alt="course logo" className="object-cover w-40" />
+                        <button type="button" onClick={() => deleteBlob(courseToEdit.imageUrl)} className="btn btn-error">delete image</button>
                     </div>
                 }
                 <button className="btn btn-primary mt-2" type="submit">submit</button>
