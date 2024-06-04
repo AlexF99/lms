@@ -14,7 +14,7 @@ export default async function Module({ params }: { params: { id: string } }) {
         },
     })
 
-    if (!mod) return <h1 className="text-xl">Can't find module!</h1>
+    if (!mod) return <h1 className="text-xl">Cannot find module!</h1>
 
     return (
         <div>
