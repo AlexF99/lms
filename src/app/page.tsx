@@ -12,7 +12,7 @@ export default function Base() {
     if (session?.user) {
       router.push('/home');
     }
-  }, [session])
+  }, [router, session])
 
   return (
     <div>
